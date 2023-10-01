@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Code Snippets</title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/default.min.css">
+  <!-- code dracula theme -->
+  <link rel="stylesheet" href="./static/theme.css">
+
+  <!-- highlight -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/javascript.min.js"></script>
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.js"></script>
+  <!-- clipboard -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.8/clipboard.min.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', (event) => {
+      document.querySelectorAll('pre code').forEach((block) => {
+        hljs.highlightBlock(block);
+        hljs.lineNumbersBlock(block, {
+          startFrom: Number("10")
+        });
+      });
+
+      let clipboard = new ClipboardJS('#copy-button', {
+        target: function (trigger) {
+          return document.querySelector('#code');
+        }
+      });
+      clipboard.on('success', function (e) {
+        e.clearSelection();
+        document.querySelector("#copy-button").textContent = "Copied!";
+
+        setTimeout(() => {
+          document.querySelector("#copy-button").textContent = "Copy";
+        }, 3_000)
+      });
+
+      // Apply the custom language to the code block
+      const codeBlock = document.querySelector('#code');
+      hljs.highlightBlock(codeBlock);
+
+      setTimeout(highlightSpecificLines, 200)
+    });
+
+    function highlightSpecificLines() {
+      const $code = document.querySelector("#code");
+      let lines = $code.getAttribute("data-lines-to-highlight").trim();
+      if(typeof lines !== "string" ) return;
+      lines = lines.trim();
+      if( lines.length === 0 ) return;
+
+      const linesArr = lines.split(",").map(Number);
+      
+      // Add class
+      const $table = document.getElementsByTagName("table")[0];
+      $table.classList.add("highlight-blur-table")
+      linesArr.forEach(num => {
+        $table.rows[num - 1].classList.add("highlight-blur-row")
+      })
+    }
+  </script>
+</head>
+
+<body>
+  <div class="copy-container">
+    <button id="copy-button" data-clipboard-target="#code">Copy</button>
+  </div>
+  <pre><code
+      id="code"
+      class="hljs"
+      data-lines-to-highlight="5,12"
+    >// sample-file.js
+
+// Function to calculate the square of a number
+function calculateSquare(number) {
+  return number * number;
+}
+
+// Example usage
+const inputNumber = 5;
+const result = calculateSquare(inputNumber);
+
+console.log(`The square of ${inputNumber} is: ${result}`);
+</code>
+  </pre>
+  
+  <style>
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    pre {
+      margin: 0;
+    }
+
+    code {
+      border-radius: 5px;
+    }
+
+    .hljs-ln-n {
+      padding-right: 5px;
+    }
+
+    /* for block of numbers */
+    .hljs-ln-numbers {
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      -khtml-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+
+      text-align: center;
+      color: #ccc;
+      border-right: 1px solid #CCC;
+      vertical-align: top;
+      padding-right: 5px;
+
+      /* your custom style here */
+    }
+
+    /* for block of code */
+    .hljs-ln-code {
+      padding-left: 10px !important;
+    }
+
+    .copy-container {
+      position: absolute;
+      width: 100%;
+
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    /* CSS */
+    button {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 6px 14px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Roboto', sans-serif;
+      border-radius: 6px;
+      border: none;
+
+      background: #6E6D70;
+      border: 1px solid #6E6D70;
+      color: #DFDEDF;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: manipulation;
+
+      margin-top: 10px;
+      margin-right: 10px;
+    }
+
+    button:hover {
+      border: 1px solid white;
+    }
+
+    .highlighted-line {
+      border: 1px solid red;
+    }
+
+    .highlight-blur-table>tbody>tr {
+      position: relative;
+      filter: blur(0.9px);
+    }
+
+    .highlight-blur-row {
+      filter: blur(0) !important;
+    }
+
+    .highlight-blur-row>.hljs-ln-numbers::before {
+      content: "";
+      position: absolute;
+      width: 6px;
+      height: 100%;
+      background-color: #22ff26;
+      margin-left: -20px;
+    }
+  </style>
+</body>
+
+</html>
