@@ -20,7 +20,7 @@ $w.onReady(()=>{
                 console.log("User logged in and stored user email in the 'myUser' database")
             }
             else {
-                return wixData.insert("myUser", { email: currentUserEmail })
+                return wixData.insert("myUser", { email: currentUserEmail });
             }
         })
     }
